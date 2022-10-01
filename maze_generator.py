@@ -1,5 +1,5 @@
 from colorama import init, Fore
-from random import randint
+from random import randint, choice
 
 class Maze:
     """Generate a size x size maze
@@ -8,6 +8,7 @@ class Maze:
     def __init__(self, size = 5) -> None:
 
         self.size = size * 2 + 1
+        self.visited = []
         wall = 0
         path = 1
 
@@ -31,6 +32,39 @@ class Maze:
         while self.is_wall(x, y):
             x = randint(2, self.size - 1)
             y = randint(2, self.size - 1)
+        
+        return (x, y)
+
+    def get_neighbour(self, x, y):
+        '''Get the NWES neighours of a cell'''
+        adj = [(x - 2, y),
+               (x + 2, y),
+               (x, y + 2),
+               (x, y - 2),
+               ]
+        neighbours = [
+            cell for cell in adj
+            if not self.is_wall(cell) and cell not in self.visited
+        ]
+
+        cell = choice(neighbours)
+        self.visited.append(cell)
+        return cell
+
+    def connect_neighbour(self, cell1, cell2):
+        '''Connect 2 cells separated by a wall'''
+        if cell1[0] == cell2[0]:
+            if cell1[1] > cell2[1]:
+                self.flip(cell1[0], cell1[1] - 1)
+            else:
+                self.flip(cell1[0], cell1[1] + 1)
+        else:
+            if cell1[0] > cell2[0]:
+                self.flip(cell1[0] - 1, cell1[1])
+            else:
+                self.flip(cell1[0] + 1, cell1[1])
+
+
         
 
             
