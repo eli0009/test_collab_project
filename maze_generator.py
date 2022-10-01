@@ -1,3 +1,4 @@
+from sqlite3 import connect
 from colorama import init, Fore
 from random import randint, choice
 
@@ -22,9 +23,26 @@ class Maze:
                     if j != 2:
                         self.flip(j-1, i)    
 
+        self.generate()
+
+    def generate(self):
+        '''Generate a maze'''
+        cell = self.first_cell()
+
+        def remove_wall(cell1):
+            cell2 = self.get_neighbour(*cell1)
+            if cell2:
+                self.connect_neighbour(cell1, cell2)
+                self.display()
+                print('=================')
+                remove_wall(cell2)
+            else:
+                return
+
+        remove_wall(cell)
 
     def first_cell(self):
-        '''Generate a maze according to this algorithm : https://rosettacode.org/wiki/Maze_generation#Python'''
+        '''Get a random cell that is not a wall'''
 
         x = randint(2, self.size - 1)
         y = randint(2, self.size - 1)
@@ -44,12 +62,14 @@ class Maze:
                ]
         neighbours = [
             cell for cell in adj
-            if not self.is_wall(cell) and cell not in self.visited
+            if not self.is_wall(*cell) and cell not in self.visited
         ]
-
-        cell = choice(neighbours)
-        self.visited.append(cell)
-        return cell
+        if neighbours:
+            cell = choice(neighbours)
+            self.visited.append(cell)
+            return cell
+        else:
+            return None
 
     def connect_neighbour(self, cell1, cell2):
         '''Connect 2 cells separated by a wall'''
@@ -64,13 +84,7 @@ class Maze:
             else:
                 self.flip(cell1[0] + 1, cell1[1])
 
-
-        
-
-            
-                
-
-    def flip(self, x, y):
+    def flip(self, x, y, type=None):
         '''Flip the value of a maze cell between 1 and 0
         0 < x, y <= size
         '''
