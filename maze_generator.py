@@ -13,9 +13,13 @@ class Maze:
 
         self.maze = [[wall] * self.size for _ in range(self.size)]
 
-        for i in range(0, self.size-1):
-            for j in range(3, self.size, 2):
-                self.flip(i, j)
+        for i in range(2, self.size):
+            for j in range(2, self.size, 2):
+                if i % 2 == 0:
+                    self.flip(j, i)
+                else:
+                    if j != 2:
+                        self.flip(j-1, i)    
                 
 
     def flip(self, x, y):
