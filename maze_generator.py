@@ -11,10 +11,10 @@ class Maze:
         wall = 0
         path = 1
 
-        self.maze = [[wall] * self.size for _ in range(self.size)]
+        self.maze = [[wall] * self.size for _ in range(self.size)] # to fill the whole maze with walls
 
         for i in range(0, self.size-1):
-            for j in range(3, self.size, 2):
+            for j in range(3, self.size, 2): # jumps 2 cells at a time
                 self.flip(i, j)
                 
 
@@ -22,9 +22,10 @@ class Maze:
         '''Flip the value of a maze cell between 1 and 0
         0 < x, y <= size
         '''
-        x = x - 1
+        # we need to consider the case when x,y = 0 because then x = x  - 1 = -1
+        x = x - 1 # list starts at index 0 so we subtract 1 
         y = y - 1
-        self.maze[x][y] = int(not self.maze[x][y])
+        self.maze[x][y] = int(not self.maze[x][y]) 
 
     def is_wall(self, x, y):
         '''Check if a cell if a wall'''
