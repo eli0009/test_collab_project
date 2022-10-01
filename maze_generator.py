@@ -1,5 +1,5 @@
-from pprint import pprint
 from colorama import init, Fore
+from random import randint
 
 class Maze:
     """Generate a size x size maze
@@ -20,6 +20,20 @@ class Maze:
                 else:
                     if j != 2:
                         self.flip(j-1, i)    
+
+
+    def first_cell(self):
+        '''Generate a maze according to this algorithm : https://rosettacode.org/wiki/Maze_generation#Python'''
+
+        x = randint(2, self.size - 1)
+        y = randint(2, self.size - 1)
+
+        while self.is_wall(x, y):
+            x = randint(2, self.size - 1)
+            y = randint(2, self.size - 1)
+        
+
+            
                 
 
     def flip(self, x, y):
