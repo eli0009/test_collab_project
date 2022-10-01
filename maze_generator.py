@@ -33,6 +33,9 @@ class Maze:
         self.flip(*start, 's')
         self.flip(*end, 'e')
 
+        self.start = start
+        self.end = end
+
     def generate(self):
         '''Generate a maze'''
         cell = self.first_cell()
@@ -129,6 +132,6 @@ class Maze:
 
 if __name__ == "__main__":
 
-    m = Maze()
+    m = Maze(8)
     m.display()
 
