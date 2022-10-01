@@ -24,6 +24,14 @@ class Maze:
                         self.flip(j-1, i)    
 
         self.generate()
+        # choose a random start and end
+        start = choice(self.visited)
+        end = choice(self.visited)
+        while end == start:
+            end = choice(self.visited)
+
+        self.flip(*start, 's')
+        self.flip(*end, 'e')
 
     def generate(self):
         '''Generate a maze'''
@@ -33,8 +41,6 @@ class Maze:
             cell2 = self.get_neighbour(*cell1)
             if cell2:
                 self.connect_neighbour(cell1, cell2)
-                self.display()
-                print('=================')
                 remove_wall(cell2)
             else:
                 return
@@ -84,32 +90,41 @@ class Maze:
             else:
                 self.flip(cell1[0] + 1, cell1[1])
 
-    def flip(self, x, y, type=None):
+    def flip(self, x, y, value=None):
         '''Flip the value of a maze cell between 1 and 0
         0 < x, y <= size
         '''
         # we need to consider the case when x,y = 0 because then x = x  - 1 = -1
         x = x - 1 # list starts at index 0 so we subtract 1 
         y = y - 1
-        self.maze[x][y] = int(not self.maze[x][y]) 
+        if value is None:
+            self.maze[x][y] = int(not self.maze[x][y])
+        else:
+            self.maze[x][y] = value
 
     def is_wall(self, x, y):
         '''Check if a cell if a wall'''
         x = x - 1
         y = y - 1
-        return not self.maze[x][y]
+        try:
+            return not self.maze[x][y]
+        except:
+            return True
 
     def display(self):
         '''Print the maze in color'''
         init()
         for i in range(self.size):
             for j in range(self.size):
-                if self.maze[j][i]:
+
+                if self.maze[j][i] == 'e':
+                    print(Fore.BLUE, f'{self.maze[j][i]}', end="")
+                elif self.maze[j][i] == 's':
+                    print(Fore.GREEN, f'{self.maze[j][i]}', end="")
+                elif self.maze[j][i]:
                     print(Fore.WHITE, f'{self.maze[j][i]}', end="")
                 elif not self.maze[j][i]:
                     print(Fore.RED, f'{self.maze[j][i]}', end="")
-                else:
-                    print(Fore.BLUE, f'{self.maze[j][i]}', end="")
             print('\n')
 
 if __name__ == "__main__":
